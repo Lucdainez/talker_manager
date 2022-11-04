@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllTalkers, getTalkerId } = require('./talker');
+const { getAllTalkers, getTalkerId, generateRandomToken } = require('./talker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -31,6 +31,15 @@ app.get('/talker/:id', async (req, res) => {
       .json({ message: 'Pessoa palestrante não encontrada' });
   }
   return res.status(200).json(talkerId);
+});
+
+app.post('/login', (req, res) => {
+  const token = generateRandomToken();
+  const { email, password } = req.body;
+  if (email && password) {
+    return res.status(200).json({ token });
+  }
+  return res.status(400).json({ message: 'email e password inválidos' });
 });
 
 app.listen(PORT, () => {
