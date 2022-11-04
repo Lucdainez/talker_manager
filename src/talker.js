@@ -16,7 +16,17 @@ const getTalkerId = async (id) => {
   return talkers.find((talker) => talker.id === id);
 };
 
+const generateRandomToken = () => {
+  let token = '';
+  const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < 16; i += 1) {
+      token += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+  }
+  return token;
+};
+
 module.exports = {
   getAllTalkers,
   getTalkerId,
+  generateRandomToken,
 };
