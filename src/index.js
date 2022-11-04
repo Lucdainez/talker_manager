@@ -1,6 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllTalkers, getTalkerId, generateRandomToken } = require('./talker');
+const {
+  getAllTalkers,
+  getTalkerId,
+  generateRandomToken,
+} = require('./talker');
+const {
+  verificationEmail,
+  verificationEmailRegex,
+  verificationPassword,
+  verificationPasswordLength,
+} = require('./middlewares/verificationEmailAndPassword');
 
 const app = express();
 app.use(bodyParser.json());
@@ -33,13 +43,14 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(200).json(talkerId);
 });
 
-app.post('/login', (req, res) => {
+app.post('/login',
+  verificationEmail,
+  verificationEmailRegex,
+  verificationPassword,
+  verificationPasswordLength,
+  (_req, res) => {
   const token = generateRandomToken();
-  const { email, password } = req.body;
-  if (email && password) {
-    return res.status(200).json({ token });
-  }
-  return res.status(400).json({ message: 'email e password inválidos' });
+  return res.status(200).json({ token });
 });
 
 app.listen(PORT, () => {
