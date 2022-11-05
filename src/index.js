@@ -4,6 +4,7 @@ const {
   getAllTalkers,
   getTalkerId,
   generateRandomToken,
+  addTalker,
 } = require('./talker');
 const {
   verificationEmail,
@@ -11,6 +12,16 @@ const {
   verificationPassword,
   verificationPasswordLength,
 } = require('./middlewares/verificationEmailAndPassword');
+const tokenVerification = require('./middlewares/tokenVerification');
+const { nameFieldVerification,
+  lengthNameVerification,
+  ageFieldVerification,
+  minorVerification,
+  talkFieldVerification,
+  watchedAtFieldVerification,
+  watchedAtDataVerification,
+  rateFieldVerification,
+  rateLengthVerification } = require('./middlewares/verificationRegisterTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -51,6 +62,24 @@ app.post('/login',
   (_req, res) => {
   const token = generateRandomToken();
   return res.status(200).json({ token });
+});
+
+app.use(tokenVerification);
+
+app.post('/talker',
+nameFieldVerification,
+lengthNameVerification,
+ageFieldVerification,
+minorVerification,
+talkFieldVerification,
+watchedAtFieldVerification,
+watchedAtDataVerification,
+rateFieldVerification,
+rateLengthVerification,
+  async (req, res) => {
+  const newTalker = req.body;
+  const lastTalker = await addTalker(newTalker);
+  return res.status(201).json(lastTalker);
 });
 
 app.listen(PORT, () => {
