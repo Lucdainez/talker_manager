@@ -8,6 +8,7 @@ const {
   generateRandomToken,
   addTalker,
   putTalker,
+  deleteTalker,
 } = require('./talker');
 
 const {
@@ -104,6 +105,12 @@ async (req, res) => {
   const alteredTalker = req.body;
   const talkerReturn = await putTalker(Number(id), alteredTalker);
   return res.status(200).json(talkerReturn);
+});
+
+app.delete('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  await deleteTalker(Number(id));
+  return res.status(204).end();
 });
 
 app.listen(PORT, () => {
