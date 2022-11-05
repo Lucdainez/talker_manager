@@ -35,9 +35,21 @@ const addTalker = async (newTalker) => {
   return newTalkerWithId;
 };
 
+const putTalker = async (id, newObj) => {
+  const oldTalkers = await readTalkerFile();
+  const talker1 = oldTalkers.find((talker) => talker.id === id);
+  const talkerId = talker1.id;
+  const removeTalkers = oldTalkers.filter((talker) => talker.id !== talkerId);
+  const alteredTalker = { id: talkerId, ...newObj };
+  const allNewTalkers = JSON.stringify([...removeTalkers, alteredTalker]);
+  await fs.writeFile(path.resolve(__dirname, '.', 'talker.json'), allNewTalkers);
+  return alteredTalker;
+};
+
 module.exports = {
   getAllTalkers,
   getTalkerId,
   generateRandomToken,
   addTalker,
+  putTalker,
 };
