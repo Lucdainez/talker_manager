@@ -53,6 +53,18 @@ const deleteTalker = async (id) => {
   await fs.writeFile(path.resolve(__dirname, '.', 'talker.json'), allTalkers);
 };
 
+const getTalkersByQuery = async (query) => {
+  const talkers = await readTalkerFile();
+  const requestTalkers = talkers.filter(({ name }) => name.includes(query));
+  if (!query) {
+    return talkers;
+  }
+  if (!requestTalkers) {
+    return [];
+  }
+  return requestTalkers;
+};
+
 module.exports = {
   getAllTalkers,
   getTalkerId,
@@ -60,4 +72,5 @@ module.exports = {
   addTalker,
   putTalker,
   deleteTalker,
+  getTalkersByQuery,
 };
