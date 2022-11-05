@@ -9,6 +9,7 @@ const {
   addTalker,
   putTalker,
   deleteTalker,
+  getTalkersByQuery,
 } = require('./talker');
 
 const {
@@ -52,16 +53,6 @@ app.get('/talker', async (_req, res) => {
   return res.status(404).json([]);
 });
 
-app.get('/talker/:id', async (req, res) => {
-  const { id } = req.params;
-  const talkerId = await getTalkerId(Number(id));
-  if (!talkerId) {
-    return res.status(404)
-      .json({ message: 'Pessoa palestrante não encontrada' });
-  }
-  return res.status(200).json(talkerId);
-});
-
 app.post('/login',
   verificationEmail,
   verificationEmailRegex,
@@ -70,6 +61,22 @@ app.post('/login',
   (_req, res) => {
   const token = generateRandomToken();
   return res.status(200).json({ token });
+});
+
+app.get('/talker/search', tokenVerification, async (req, res) => {
+  const { q } = req.query;
+  const response = await getTalkersByQuery(q);
+  return res.status(200).json(response);
+});
+
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const talkerId = await getTalkerId(Number(id));
+  if (!talkerId) {
+    return res.status(404)
+      .json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  return res.status(200).json(talkerId);
 });
 
 app.use(tokenVerification);
