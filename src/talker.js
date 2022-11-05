@@ -25,8 +25,19 @@ const generateRandomToken = () => {
   return token;
 };
 
+const addTalker = async (newTalker) => {
+  let id = 5;
+  const oldTalkers = await readTalkerFile();
+  const newTalkerWithId = { id, ...newTalker };
+  const allTalkers = JSON.stringify([...oldTalkers, newTalkerWithId]);
+  await fs.writeFile(path.resolve(__dirname, '.', 'talker.json'), allTalkers);
+  id += 1;
+  return newTalkerWithId;
+};
+
 module.exports = {
   getAllTalkers,
   getTalkerId,
   generateRandomToken,
+  addTalker,
 };
