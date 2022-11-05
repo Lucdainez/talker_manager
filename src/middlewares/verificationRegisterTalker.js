@@ -63,8 +63,8 @@ const watchedAtDataVerification = (req, res, next) => {
 };
 
 const rateFieldVerification = (req, res, next) => {
-  const { rate } = req.body.talk;
-  if (!rate) {
+  const { talk } = req.body;
+  if (!Object.keys(talk).some((a) => a === 'rate')) {
     return res.status(400)
       .json({ message: 'O campo "rate" é obrigatório' });
   }
@@ -73,7 +73,7 @@ const rateFieldVerification = (req, res, next) => {
 
 const rateLengthVerification = (req, res, next) => {
   const { rate } = req.body.talk;
-  if (rate < 1 || rate > 5 || !Number.isInteger(rate)) {
+  if (rate <= 0 || rate > 5 || !Number.isInteger(rate)) {
     return res.status(400)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
